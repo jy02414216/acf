@@ -5,7 +5,6 @@
 	> Created Time: 2013年07月29日 星期一 16时58分12秒
  ************************************************************************/
 #include "acf.h"
-#include <libconfig.h>
 
 global_data_t g_data;//全局变量
 
@@ -38,7 +37,7 @@ int creat_server()
 	signal(SIGCHLD,sig_child);
 	for(;;)
 	{
-		printf("now pid:%d\n",getpid());	
+		printf("now pid:%d\n",(int)getpid());	
 		fflush(stdout);
 		len = sizeof(cliaddr);
 		//别忘了给len赋值，这个坑让我查了一个多小时
@@ -62,6 +61,7 @@ int creat_server()
 		}
 		Close(connfd);
 	}
+    return 0;
 }
 
 void sig_child(int signo)
@@ -72,37 +72,48 @@ void sig_child(int signo)
 	return ;
 }
 
-int main(int argc, char **argv)
+int init()
 {
-	if(argc != 2)
-	{	
-		printf("args wrong!\n");
-		exit(1);
-	}
-	char *conf_path = argv[1];
-    
     config_t cfg;
     config_init(&cfg);
-    if (!config_read_file(&cfg, conf_path))
+    if (!config_read_file(&cfg, g_data.conf_path))
     {
+        fprintf(stderr, "load conf file failed\n");
         return -1;
     }
    
     const char* ip;
     if (!config_lookup_string(&cfg, "server.ip", &ip)) 
     {
-        printf("fuck");
+        fprintf(stderr, "load server ip failed!\n");
         return -1;
     }
     snprintf(g_data.srt.ip, TINY_STR_LEN, "%s", ip);
     if (!config_lookup_int(&cfg, "server.port", &g_data.srt.port))
     {
-        printf("fuck");
+        fprintf(stderr, "load server port failed!\n");
         return -1;
     }
     printf("%s, %d\n", g_data.srt.ip, g_data.srt.port);
     config_destroy(&cfg);
-	creat_server();
+    return 0;
+}
+
+int main(int argc, char **argv)
+{
+	if(argc != 2)
+	{	
+		fprintf(stderr, "args wrong!\n");
+        return -1;
+	}
+	char *conf_path = argv[1];
+    snprintf(g_data.conf_path, sizeof(g_data.conf_path), "%s", conf_path);
+        
+    if (init() != 0) 
+    {
+        return -1;
+    }
+    creat_server();
 	return 0;
 }
 
