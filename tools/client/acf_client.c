@@ -5,15 +5,17 @@
 	> Created Time: 2013年07月30日 星期二 14时04分02秒
  ************************************************************************/
 
-#include "hb.h"
+#include "acf.h"
+#include <libconfig.h>
 #define DATA_MAX_LEN 1000
+
+server_t server;
 
 void creat_client()
 {	
 	int fd;
 	struct sockaddr_in cliddr,servddr;
 	char *ip = "127.0.0.1";
-	char *servip = "10.40.55.41";
 	char buf[1000] = {0};
 	
 	cliddr.sin_family = AF_INET;
@@ -25,8 +27,8 @@ void creat_client()
 	//Bind(fd,(struct sockaddr *)&cliddr,sizeof(cliddr));
 
 	servddr.sin_family = AF_INET;
-	Inet_pton(AF_INET,servip,&servddr.sin_addr);
-	servddr.sin_port = htons(31161);
+	Inet_pton(AF_INET,server.ip,&servddr.sin_addr);
+	servddr.sin_port = htons(server.port);
 	
 	Connect(fd,(struct sockaddr *)&servddr,sizeof(servddr));
 	
@@ -43,9 +45,41 @@ void creat_client()
 	
 }
 
-
-int main()
+int init() 
 {
+
+}
+
+int main(int argc, char **argv)
+{
+    if (argc != 2)
+	{	
+		fprintf(stderr, "args wrong!\n");
+        return -1;
+	}
+	char *conf_path = argv[1];
+    
+    config_t cfg;
+    config_init(&cfg);
+    if (!config_read_file(&cfg, conf_path))
+    {
+        return -1;
+    }
+   
+    const char* ip;
+    if (!config_lookup_string(&cfg, "server.ip", &ip)) 
+    {
+        fprintf(stderr, "get server ip fail");
+        return -1;
+    }
+    snprintf(server.ip, TINY_STR_LEN, "%s", ip);
+    if (!config_lookup_int(&cfg, "server.port", &server.port))
+    {
+        fprintf(stderr, "get server port fail");
+        return -1;
+    }
+    config_destroy(&cfg);
+    printf("server:%s, %d\n", server.ip, server.port);
 	creat_client();
 	exit(0);
 	return 0;

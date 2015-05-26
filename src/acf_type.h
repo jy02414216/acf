@@ -19,6 +19,7 @@ typedef struct _server_t
 //全局变量
 typedef struct _global_data_t
 {
+    char conf_path[GEN_STR_LEN];//配置文件地址
     server_t srt;
 }global_data_t;
 

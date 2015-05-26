@@ -1,16 +1,16 @@
 #################设计系统参数#######################################
-WORKROOT    :=  ../
+WORKROOT    :=  ../../
 CC  :=  gcc 
 CXX :=  g++ 
 CFLAGS  :=  -pipe -Wall -W -g 
 CXXFLAGS    :=  -pipe -Wall -W -g 
 
-DEP_INCPATH = -I$(WORKROOT)/include
-DEP_LDFLAGS = -L$(WORKROOT)/lib/wrapsock/output/lib
-DEP_LDLIBS = -lwrapsock
+DEP_INCPATH = -I$(WORKROOT)/src -I$(WORKROOT)/src/lib/wrapsock/output/include -I$(WORKROOT)/third-lib/libconfig/include
+DEP_LDFLAGS = -L$(WORKROOT)/src/lib/wrapsock/output/lib -L$(WORKROOT)/third-lib/libconfig/lib
+DEP_LDLIBS = -lwrapsock -lconfig
 
-CCFILE = client.c
-TARGET = client
+CCFILE = acf_client.c
+TARGET = acf_client
 
 all : 	
 	$(CC) $(CCFILE) $(DEP_INCPATH) $(CFLAGS) $(DEP_LDFLAGS) $(DEP_LDLIBS) -o $(TARGET)
@@ -19,11 +19,14 @@ clean :
 	$(_clean)
 
 define _output
-    mkdir -p output
-	mkdir -p output/bin
-	cp -rf $(TARGET) output/bin
+	mkdir -p output/bin output/conf
+	cp $(TARGET) output/bin/
+	cp -r conf/* output/conf/
+
 endef
 
 define _clean
+	rm -rf *.o
+	rm -rf $(TARGET)
 	rm -rf output
 endef

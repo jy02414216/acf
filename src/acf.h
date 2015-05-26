@@ -10,6 +10,7 @@
 #include "acf_define.h"
 #include "acf_type.h"
 #include "wrapsock.h"
+#include <libconfig.h>
 
 //进程退出的回调函数
 void sig_child(int signo);
