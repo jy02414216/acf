@@ -9,8 +9,8 @@ DEP_INCPATH = -I$(WORKROOT)/src -I$(WORKROOT)/src/lib/wrapsock/output/include -I
 DEP_LDFLAGS = -L$(WORKROOT)/src/lib/wrapsock/output/lib -L$(WORKROOT)/third-lib/libconfig/lib
 DEP_LDLIBS = -lwrapsock -lconfig -lpthread
 
-CCFILE = acf_client.cpp
-TARGET = acf_client
+CCFILE = echo_client.cpp
+TARGET = echo_client
 
 all : 	
 	$(CXX) $(CCFILE) $(DEP_INCPATH) $(CFLAGS) $(DEP_LDFLAGS) $(DEP_LDLIBS) -o $(TARGET)

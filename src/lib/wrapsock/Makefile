@@ -9,13 +9,13 @@ DEP_INCPATH =
 DEP_LDFLAGS = 
 DEP_LDLIBS = 
 
-CCFILE = wrapsock.c
+CCFILE = wrapsock.cpp
 OFILE = wrapsock.o
 TARGET = libwrapsock.a
 HEADERS = *.h
 
 all : 	
-	$(CC) $(CCFILE) $(DEP_INCPATH) $(CFLAGS) $(DEP_LDFLAGS) $(DEP_LDLIBS) 
+	$(CXX) $(CCFILE) $(DEP_INCPATH) $(CFLAGS) $(DEP_LDFLAGS) $(DEP_LDLIBS) 
 	ar -r $(TARGET) $(OFILE) 
 	$(_output)
 clean : 

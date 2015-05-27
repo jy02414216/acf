@@ -11,6 +11,18 @@
 #include "acf_type.h"
 #include "wrapsock.h"
 #include <libconfig.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <pthread.h>
 
 //进程退出的回调函数
 void sig_child(int signo);

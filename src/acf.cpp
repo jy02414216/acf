@@ -53,7 +53,7 @@ int creat_server()
 			while((n = Recv(connfd,buf,sizeof(buf),0)) > 0 )
 			{
 				buf[n] = 0;
-				printf("recv:%s,strlen:%d,sizeof:%d\n",buf,strlen(buf),sizeof(buf));
+				printf("recv:%s,strlen:%d,sizeof:%d\n",buf,(int)strlen(buf),(int)sizeof(buf));
 				Send(connfd,buf,strlen(buf),0);
 			}
 			Close(connfd);
